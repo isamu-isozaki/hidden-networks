@@ -120,6 +120,12 @@ def parse_arguments():
         type=lambda x: [int(a) for a in x.split(",")],
         help="Which GPUs to use for multigpu training",
     )
+    parser.add_argument(
+        "--gpu",
+        default=None,
+        type=str,
+        help="The name of the gpu",
+    )
 
     # Learning Rate Policy Specific
     parser.add_argument(
