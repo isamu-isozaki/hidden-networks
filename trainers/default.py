@@ -10,6 +10,8 @@ __all__ = ["train", "validate", "modifier"]
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args, writer):
+    use_cuda = torch.cuda.is_available()
+    device = torch.device('cuda:0' if use_cuda else 'cpu')
     batch_time = AverageMeter("Time", ":6.3f")
     data_time = AverageMeter("Data", ":6.3f")
     losses = AverageMeter("Loss", ":.3f")
@@ -40,10 +42,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
 
         # compute output
         output = model(images)
-
+        output.to(device)
+        target.to(device)
         loss = criterion(output, target)
 
         # measure accuracy and record loss
+
         acc1, acc5 = accuracy(output, target, topk=(1, 5))
         losses.update(loss.item(), images.size(0))
         top1.update(acc1.item(), images.size(0))
@@ -67,6 +71,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args, writer):
 
 
 def validate(val_loader, model, criterion, args, writer, epoch):
+    use_cuda = torch.cuda.is_available()
+    device = torch.device('cuda:0' if use_cuda else 'cpu')
     batch_time = AverageMeter("Time", ":6.3f", write_val=False)
     losses = AverageMeter("Loss", ":.3f", write_val=False)
     top1 = AverageMeter("Acc@1", ":6.2f", write_val=False)
@@ -90,6 +96,8 @@ def validate(val_loader, model, criterion, args, writer, epoch):
 
             # compute output
             output = model(images)
+            output.to(device)
+            target.to(device)
 
             loss = criterion(output, target)
 
