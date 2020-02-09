@@ -10,7 +10,6 @@ __all__ = ["train", "validate", "modifier"]
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args, writer):
-    print(f"The gpu is {args.gpu}")
     device = torch.device(args.gpu)
     batch_time = AverageMeter("Time", ":6.3f")
     data_time = AverageMeter("Data", ":6.3f")
