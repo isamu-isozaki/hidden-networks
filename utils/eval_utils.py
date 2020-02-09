@@ -4,6 +4,8 @@ import torch
 def accuracy(output, target, topk=(1,)):
     """Computes the accuracy over the k top predictions for the specified values of k"""
     with torch.no_grad():
+        #Top k as the matrix is n_classes size and at the highest value, it should be the correct class
+        #Thus if the correct answer is in the top 1% of predictions, it is also in the top 5% of predictions.
         maxk = max(topk)
         batch_size = target.size(0)
 

@@ -12,6 +12,10 @@ import torch.optim
 import torch.utils.data
 import torch.utils.data.distributed
 
+import wandb
+wandb.init(project="random-nets")
+
+
 from utils.conv_type import FixedSubnetConv, SampleSubnetConv
 from utils.logging import AverageMeter, ProgressMeter
 from utils.net_utils import (
@@ -54,6 +58,8 @@ def main_worker(args):
     # create model and optimizer
     model = get_model(args)
     model = set_gpu(args, model)
+    wandb.watch(model)
+
 
     if args.pretrained:
         pretrained(args, model)
@@ -166,6 +172,10 @@ def main_worker(args):
                 filename=ckpt_base_dir / f"epoch_{epoch}.state",
                 save=save,
             )
+            wandb.log({
+                    "curr_acc1": acc1,
+                    "curr_acc5": acc5,
+                })
 
         epoch_time.update((time.time() - end_epoch) / 60)
         progress_overall.display(epoch)
